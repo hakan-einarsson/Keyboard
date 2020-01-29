@@ -12,10 +12,17 @@ const G4=A4*Math.pow(2,-2/12);
 const Gs4=A4*Math.pow(2,-1/12);
 
 var oscillators=[]
+oscillators.push(new Instrument(oscillators.length+1,50,'sine'));
+oscillators.push(new Instrument(oscillators.length+1,75,'triangle'));
+oscillators.push(new Instrument(oscillators.length+1,100,'sine'));
 
-var ctx = new AudioContext();
+
+
+
+
 
 function playNote(note){
+    var ctx = new AudioContext();
     let filter=ctx.createBiquadFilter();
     let oscillator = ctx.createOscillator();
     //let oscillator2 = ctx.createOscillator();
@@ -29,24 +36,57 @@ function playNote(note){
     gainNode.gain.setValueAtTime(0.1,ctx.currentTime);
     gainNode.gain.setTargetAtTime(0,ctx.currentTime,0.4);
     oscillator.type=$('#waveType option:selected').text().toLowerCase();
-    //oscillator2.type="sine";
-    //console.log(oscillator);
-    //console.log($('#waveType option:selected').text());
     oscillator.frequency.setValueAtTime(note,ctx.currentTime);
-    //oscillator2.frequency.setValueAtTime(note*1/Math.pow(2,(2)),ctx.currentTime);
     oscillator.start();
-    //oscillator2.start();
     oscillator.stop(ctx.currentTime+2);
-    //oscillator2.stop(ctx.currentTime+6);
 
 }
+
+function playNotes(note){
+    var ctx = new AudioContext();
+    let filter=ctx.createBiquadFilter();
+    let oscillator = ctx.createOscillator();
+    
+    let gainNode = ctx.createGain();
+    filter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.connect(filter);
+    
+    filter.type="bandpass";
+    filter.frequency.value=70;
+    gainNode.gain.setValueAtTime(0.5,ctx.currentTime);
+    gainNode.gain.setTargetAtTime(0,ctx.currentTime,0.4);
+    oscillator.type=$('#waveType option:selected').text().toLowerCase();
+    oscillator.frequency.setValueAtTime(note,ctx.currentTime);
+    oscillator.start();
+    oscillator.stop(ctx.currentTime+2);
+    oscillators.forEach(element => {
+        console.log(element)
+        let oscillator2 = ctx.createOscillator();
+        oscillator2.connect(filter);
+        oscillator2.type=element.wave;
+        oscillator2.frequency.setValueAtTime(element.note,ctx.currentTime);
+        oscillator2.start();
+        oscillator2.stop(ctx.currentTime+6);  
+    });
+
+   
+    
+
+}
+
 
 function getNote(note){
     let baseNote = note.split("-")[0]
     let octave = note.split("-")[1]
     playNote(checkNote(baseNote)*1/Math.pow(2,(1-octave)));
 }
-    
+
+function getNoteAnd(note){
+    let baseNote = note.split("-")[0]
+    let octave = note.split("-")[1]
+    playNotes(checkNote(baseNote)*1/Math.pow(2,(1-octave)));
+}
 
 
 function checkNote(note){
