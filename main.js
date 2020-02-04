@@ -1,114 +1,148 @@
-const A4=440;
-const Bs4=A4*Math.pow(2,1/12);
-const B4=A4*Math.pow(2,2/12);
-const C4=A4*Math.pow(2,-9/12);
-const Cs4=A4*Math.pow(2,-8/12);
-const D4=A4*Math.pow(2,-7/12);
-const Ds4=A4*Math.pow(2,-6/12);
-const E4=A4*Math.pow(2,-5/12);
-const F4=A4*Math.pow(2,-4/12);
-const Fs4=A4*Math.pow(2,-3/12);
-const G4=A4*Math.pow(2,-2/12);
-const Gs4=A4*Math.pow(2,-1/12);
+const store = new Vuex.Store({
+    state: {
+        oscillators: [{id:0,wave:"sine",filter: "bandpass", volume: 0.5,volume_start:0, volume_end:0.5,octave:1,frequency: 50, length:1},],
+        notes: {"a":440,
+                "bs":440*Math.pow(2,1/12),
+                "b":440*Math.pow(2,2/12),
+                "c":440*Math.pow(2,3/12),
+                "cs":440*Math.pow(2,4/12),
+                "d":440*Math.pow(2,5/12),
+                "ds":440*Math.pow(2,6/12),
+                "e":440*Math.pow(2,7/12),
+                "f":440*Math.pow(2,8/12),
+                "fs":440*Math.pow(2,9/12),
+                "g":440*Math.pow(2,10/12),
+                "gs":440*Math.pow(2,11/12)}
+        },
+ 
+    getters: {
+        returnNote: function(state){
+            return state.notes
+        },
+        getOsc: function(state){
+            return state.oscillators
+        }
+    }        
+})
 
-var oscillators=[]
-oscillators.push(new Instrument(oscillators.length+1,50,'sine'));
-oscillators.push(new Instrument(oscillators.length+1,75,'triangle'));
-oscillators.push(new Instrument(oscillators.length+1,100,'sine'));
-
-
-
-
-
-
-function playNote(note){
-    var ctx = new AudioContext();
-    let filter=ctx.createBiquadFilter();
-    let oscillator = ctx.createOscillator();
-    //let oscillator2 = ctx.createOscillator();
-    let gainNode = ctx.createGain();
-    filter.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    oscillator.connect(filter);
-    //oscillator2.connect(filter);
-    filter.type="bandpass";
-    filter.frequency.value=70;
-    gainNode.gain.setValueAtTime(0.1,ctx.currentTime);
-    gainNode.gain.setTargetAtTime(0,ctx.currentTime,0.4);
-    oscillator.type=$('#waveType option:selected').text().toLowerCase();
-    oscillator.frequency.setValueAtTime(note,ctx.currentTime);
-    oscillator.start();
-    oscillator.stop(ctx.currentTime+2);
-
-}
-
-function playNotes(note){
-    var ctx = new AudioContext();
-    let filter=ctx.createBiquadFilter();
-    let oscillator = ctx.createOscillator();
+Vue.component('oscillator',{
+    props: ["item"],
     
-    let gainNode = ctx.createGain();
-    filter.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    oscillator.connect(filter);
-    
-    filter.type="bandpass";
-    filter.frequency.value=70;
-    gainNode.gain.setValueAtTime(0.5,ctx.currentTime);
-    gainNode.gain.setTargetAtTime(0,ctx.currentTime,0.4);
-    oscillator.type=$('#waveType option:selected').text().toLowerCase();
-    oscillator.frequency.setValueAtTime(note,ctx.currentTime);
-    oscillator.start();
-    oscillator.stop(ctx.currentTime+2);
-    oscillators.forEach(element => {
-        console.log(element)
-        let oscillator2 = ctx.createOscillator();
-        oscillator2.connect(filter);
-        oscillator2.type=element.wave;
-        oscillator2.frequency.setValueAtTime(element.note,ctx.currentTime);
-        oscillator2.start();
-        oscillator2.stop(ctx.currentTime+6);  
-    });
+    template:'<div class="row justify-content-center"><div class="col-1 text-center">{{this.item.id+1}}</div>\
+                <div class="col-1"><select class="form-control" v-model:value=wave>\
+                <option value="sine">Sine</option><option value="square">Square</option>\
+                <option value="sawtooth">Sawtooth</option><option value="triangle">Triangle</option>\
+                </select></div>\
+                <div class="col-1"><select class="form-control" v-model:value=filter>\
+                <option value="lowpass">Lowpass</option><option value="highpass">Highpass</option>\
+                <option value="bandpass">Bandpass</option><option value="lowshelf">Lowshelf</option>\
+                <option value="highshelf">Highshelf</option><option value="peaking">Peaking</option>\
+                <option value="notch">Notch</option><option value="allpass">Allpass</option></select></div>\
+                <div class="col-1"><input type="number" min="0" max="1" step="0.01" class="form-control" v-model:value=volume></div>\
+                <div class="col-1"><input type="text" class="form-control" v-model:value=volume_start></div>\
+                <div class="col-1"><input type="number" class="form-control" v-model:value=octave></div>\
+                <div class="col-1"><input type="number" class="form-control" v-model:value=frequency></div>\
+                <div class="col-1"><input type="number" step="0.01" class="form-control" v-model:value=length></div></div>',
+    computed: {
+        wave: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].wave
+            },
+            set(value){
+                return "value"
+            }
+        },
+        filter: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].filter
+            },
+            set(value){
+                return "value"
+            }
+        },
+        volume: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].volume
+            },
+            set(value){
+                return "value"
+            }
+        },
+        volume_start: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].volume_start
+            },
+            set(value){
+                return "value"
+            }
+        },
+        volume_end: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].volume_end
+            },
+            set(value){
+                return "value"
+            }
+        },
+        octave: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].octave
+            },
+            set(value){
+                return "value"
+            }
+        },
+        frequency: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].frequency
+            },
+            set(value){
+                return "value"
+            }
+        },
+        length: {
+            get(){
+                return this.$store.state.oscillators[this.item.id].length
+            },
+            set(value){
+                return "value"
+            }
+        },
+        
+    }
+});
 
-   
-    
+const app = new Vue({
+    el: "#app",
+    store,
+    methods : {
+        playNote: function (note){
+            let ctx = new AudioContext();
+            let filter=ctx.createBiquadFilter();
+            let oscillator = ctx.createOscillator();
+            let gainNode = ctx.createGain();
+            filter.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            oscillator.connect(filter);
+            filter.type="bandpass";
+            filter.frequency.value=70;
+            gainNode.gain.setValueAtTime(0.1,ctx.currentTime);
+            gainNode.gain.setTargetAtTime(0,ctx.currentTime,0.4);
+            oscillator.type="sine";
+            oscillator.frequency.setValueAtTime(note,ctx.currentTime);
+            oscillator.start();
+            oscillator.stop(ctx.currentTime+2);
+        
+        },
+        getNote: function(note){
+            let baseNote = note.split("-")[0]
+            let octave = note.split("-")[1]
+            this.playNote(this.$store.getters.returnNote[baseNote]*1/Math.pow(2,(1-octave)));
+            console.log(this.$store.getters.returnNote[baseNote]*1/Math.pow(2,(1-octave)))
+        },
+        test: function(){
+            console.log(this.$store.getters.returnNote['c'])
+        }
 
-}
-
-
-function getNote(note){
-    let baseNote = note.split("-")[0]
-    let octave = note.split("-")[1]
-    playNote(checkNote(baseNote)*1/Math.pow(2,(1-octave)));
-}
-
-function getNoteAnd(note){
-    let baseNote = note.split("-")[0]
-    let octave = note.split("-")[1]
-    playNotes(checkNote(baseNote)*1/Math.pow(2,(1-octave)));
-}
-
-
-function checkNote(note){
-    let freq=0;
-    if (note=='c')freq=C4;
-    if(note=='cs')freq=Cs4;
-    if(note=='d')freq=D4;
-    if(note=='ds')freq=Ds4;
-    if(note=='e')freq=E4;
-    if(note=='f')freq=F4;
-    if(note=='fs')freq=Fs4;
-    if(note=='g')freq=G4;
-    if(note=='gs')freq=Gs4;
-    if(note=='a')freq=A4;
-    if(note=='b')freq=B4;
-    if(note=='bs')freq=Bs4;
-    return freq;
-}
-
-function addOscillator(){
-    let id=oscillators.length;
-    
-}
-
-addOscillator()
+    }
+})
