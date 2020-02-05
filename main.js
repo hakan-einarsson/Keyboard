@@ -156,7 +156,8 @@ const app = new Vue({
             this.$store.getters.getOsc.forEach(e => {
                 let baseNote = note.split("-")[0]
                 let octave = note.split("-")[1]
-                let frequency = this.$store.getters.returnNote[baseNote]*1/Math.pow(2,(1-octave))
+                let frequency = this.$store.getters.returnNote[baseNote]*1/Math.pow(2,(2-e.octave-octave))
+                console.log(this.$store.getters.returnNote[baseNote]*1/Math.pow(2,(2-e.octave-octave)))
                 let filter=this.$store.getters.getCtx.createBiquadFilter();
                 let oscillator = this.$store.getters.getCtx.createOscillator();
                 let gainNode = this.$store.getters.getCtx.createGain();
@@ -166,7 +167,8 @@ const app = new Vue({
                 filter.type=e.filter;
                 filter.frequency.value=e.frequency;
                 gainNode.gain.setValueAtTime(e.volume,this.$store.getters.getCtx.currentTime);
-                gainNode.gain.setTargetAtTime(0,this.$store.getters.getCtx.currentTime,e.volume_start);
+                gainNode.gain.setTargetAtTime(0,this.$store.getters.getCtx.currentTime,0.2);
+                //gainNode.gain.setTargetAtTime(0,this.$store.getters.getCtx.currentTime,1);
                 oscillator.type=e.wave;
                 oscillator.frequency.setValueAtTime(frequency,this.$store.getters.getCtx.currentTime);
                 oscillator.start();
