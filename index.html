@@ -12,37 +12,38 @@
 <body>
     <div id="app">
         <ul class="ulKeyboard">
-            <li class="white e" @click="getNote('c-0');"></li>
-            <li class="black ds" @click="getNote('cs-0');"></li>
-            <li class="white d" @click="getNote('d-0');"></li>
-            <li class="black cs" @click="getNote('ds-0');"></li>
-            <li class="white c" @click="getNote('e-0');"></li>
-            <li class="white b" @click="getNote('f-0');"></li>
-            <li class="black as" @click="getNote('fs-0');"></li>
-            <li class="white a" @click="getNote('g-0');"></li>
-            <li class="black gs" @click="getNote('gs-0');"></li>
-            <li class="white g" @click="getNote('a-1');"></li>
-            <li class="black fs" @click="getNote('bs-1');"></li>
-            <li class="white f" @click="getNote('b-1');"></li>
-            <li class="white e" @click="getNote('c-1');"></li>
-            <li class="black ds" @click="getNote('cs-1');"></li>
-            <li class="white d" @click="getNote('d-1');"></li>
-            <li class="black cs" @click="getNote('ds-1');"></li>
-            <li class="white c" @click="getNote('e-1');"></li>
-            <li class="white b" @click="getNote('f-1');"></li>
-            <li class="black as" @click="getNote('fs-1');"></li>
-            <li class="white a" @click="getNote('g-1');"></li>
-            <li class="black gs" @click="getNote('gs-1');"></li>
-            <li class="white g" @click="getNote('a-2');"></li>
-            <li class="black fs" @click="getNote('bs-2');"></li>
-            <li class="white f" @click="getNote('b-2');"></li>
-            <li class="white e" @click="getNote('c-2');"></li>
-            <li class="black ds" @click="getNote('cs-2');"></li>
-            <li class="white d" @click="getNote('d-2');"></li>
-            <li class="black cs" @click="getNote('ds-2');"></li>
-            <li class="white c" @click="getNote('e-2');"></li>
+            <li class="white e" @click="playNote('c-0');"></li>
+            <li class="black ds" @click="playNote('cs-0');"></li>
+            <li class="white d" @click="playNote('d-0');"></li>
+            <li class="black cs" @click="playNote('ds-0');"></li>
+            <li class="white c" @click="playNote('e-0');"></li>
+            <li class="white b" @click="playNote('f-0');"></li>
+            <li class="black as" @click="playNote('fs-0');"></li>
+            <li class="white a" @click="playNote('g-0');"></li>
+            <li class="black gs" @click="playNote('gs-0');"></li>
+            <li class="white g" @click="playNote('a-1');"></li>
+            <li class="black fs" @click="playNote('bs-1');"></li>
+            <li class="white f" @click="playNote('b-1');"></li>
+            <li class="white e" @click="playNote('c-1');"></li>
+            <li class="black ds" @click="playNote('cs-1');"></li>
+            <li class="white d" @click="playNote('d-1');"></li>
+            <li class="black cs" @click="playNote('ds-1');"></li>
+            <li class="white c" @click="playNote('e-1');"></li>
+            <li class="white b" @click="playNote('f-1');"></li>
+            <li class="black as" @click="playNote('fs-1');"></li>
+            <li class="white a" @click="playNote('g-1');"></li>
+            <li class="black gs" @click="playNote('gs-1');"></li>
+            <li class="white g" @click="playNote('a-2');"></li>
+            <li class="black fs" @click="playNote('bs-2');"></li>
+            <li class="white f" @click="playNote('b-2');"></li>
+            <li class="white e" @click="playNote('c-2');"></li>
+            <li class="black ds" @click="playNote('cs-2');"></li>
+            <li class="white d" @click="playNote('d-2');"></li>
+            <li class="black cs" @click="playNote('ds-2');"></li>
+            <li class="white c" @click="playNote('e-2');"></li>
         </ul>
         <br>
+        <button @click=test>BTN</button>
         <div class="row justify-content-center align-items-center">
             <div class="col-1 text-center">
                 Oscillator
@@ -68,9 +69,10 @@
             <div class="col-1 text-center">
                 Length(s)
             </div>
+            <div class="col-1"></div>
         </div>
         <div v-for="(obj, index) in this.$store.getters.getOsc">
-            <oscillator :item=obj></oscillator>
+            <oscillator :item=obj class="mb-3"></oscillator>
         </div>
     </div>
         
@@ -115,7 +117,7 @@
     <script src="https://unpkg.com/vuex@3.1.2/dist/vuex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="main.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!---<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>--->
     <script>
 
     </script>
